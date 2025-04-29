@@ -1,27 +1,31 @@
 # Directory: backend/
-# Description: Python package requirements for the backend project.
+# File: requirements.txt
+# Description: Python package requirements for the backend project. (Updated)
 
 # Core Web Framework & Server
-fastapi>=0.100.0,<0.111.0 # Using a version known to work well with Pydantic v2
-uvicorn[standard]>=0.20.0,<0.25.0 # ASGI server
+fastapi>=0.95.0,<0.111.0
+uvicorn[standard]>=0.20.0,<0.25.0
 
-# Data Validation & Settings (Using Pydantic v2)
-pydantic>=2.0.0,<3.0.0
-pydantic-settings>=2.0.0 # Requires Pydantic v2
+# Data Validation & Settings
+pydantic>=1.10.0,<2.0.0
+pydantic-settings>=2.0.0
 
 # Configuration & Environment
 python-dotenv>=1.0.0
 PyYAML>=6.0
 
 # Logging
-loguru>=0.7.0
+loguru>=0.7.0 # Or remove if only using standard logging
 
-# HTTP Requests (for external APIs, skills)
+# HTTP Requests (for external APIs, skills, DeepSeek)
 requests>=2.28.0
 
 # --- LLM & AI ---
 # Google Gemini
 google-generativeai>=0.3.0
+
+# OpenAI library (Used for AIMLAPI Router Connector)
+openai>=1.0.0 # Use version 1.x+ for new API structure
 
 # SerpApi (for Web Search Skill)
 google-search-results>=2.4.0
@@ -29,28 +33,27 @@ google-search-results>=2.4.0
 # Placeholder for DeepSeek SDK (if/when available via pip)
 # deepseek-sdk==x.y.z
 
-# Placeholder for other potential LLM SDKs (e.g., OpenAI, Anthropic)
-# openai==x.y.z
+# Placeholder for other potential LLM SDKs (e.g., Anthropic)
 # anthropic==x.y.z
 
 # --- Memory ---
 # Placeholder for Vector Database client (choose one or more)
-# faiss-cpu # For local FAISS CPU version
-# faiss-gpu # For local FAISS GPU version
-# pinecone-client # For Pinecone cloud service
-# qdrant-client # For Qdrant
-# chromadb # For Chroma
+# faiss-cpu
+# faiss-gpu
+# pinecone-client
+# qdrant-client
+# chromadb
 
 # --- Optional but potentially useful ---
-# Job Queues (e.g., Celery, RQ)
+# Job Queues
 # celery==x.y.z
 # redis==x.y.z
 
-# Database ORM (if needed beyond basic memory)
+# Database ORM
 # sqlalchemy==x.y.z
-# databases # For async database access with SQLAlchemy core
+# databases
 
-# Testing (install separately in dev environment or via extras_require in setup.py)
+# Testing (install separately)
 # pytest
 # pytest-asyncio
-# httpx # For async testing of FastAPI endpoints
+# httpx

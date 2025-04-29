@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: Optional[str] = None
     SERPAPI_KEY: Optional[str] = None
     DEEPSEEK_API_KEY: Optional[str] = None
+    AIMLAPI_KEY: Optional[str] = None
     ROUTERAPI_KEY: Optional[str] = None
     # Add other API keys as needed
 
