@@ -24,25 +24,13 @@ class Settings(BaseSettings):
     ROUTERAPI_KEY: Optional[str] = None
     # Add other API keys as needed
 
-    # --- Memory Settings (Example) ---
-    # MEMORY_TYPE: str = "local" # e.g., local, pinecone, qdrant
-    # VECTOR_DB_PATH: Optional[str] = "./memory_data/vector_db" # For local vector stores
-    # PINECONE_API_KEY: Optional[str] = None
-    # PINECONE_ENVIRONMENT: Optional[str] = None
-    # QDRANT_URL: Optional[str] = None
-    # QDRANT_API_KEY: Optional[str] = None
-
-    # --- Model Router Settings (Example) ---
-    # DEFAULT_MODEL_PREFERENCE: str = "gemini"
-    # MODEL_FALLBACK_CHAIN: list[str] = ["gemini", "deepseek", "routerapi"]
+    # --- Model Router Settings ---
+    MODEL_FALLBACK_CHAIN: str = "gemini,deepseek,aimlapi:gpt-4o"  # Default fallback chain
 
     model_config = SettingsConfigDict(
-        # Load from .env file in the backend directory
         env_file=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'),
         env_file_encoding='utf-8',
-        # Case sensitivity matters for environment variables
         case_sensitive=True,
-        # Allow extra fields not defined in the model (useful for flexibility)
         extra='ignore'
     )
 
