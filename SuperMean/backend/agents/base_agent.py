@@ -77,6 +77,7 @@ class BaseAgent(ABC):
         system_prompt: Optional[str] = None,
         model_preference: Optional[str] = None,
         stream: bool = False,
+        raw_prompt: bool = False,  # New parameter to allow raw prompts
         **kwargs
     ) -> Any:
         """
@@ -87,6 +88,7 @@ class BaseAgent(ABC):
             system_prompt: Overrides the default system prompt if provided.
             model_preference: Preferred model identifier string.
             stream: Whether to stream the response.
+            raw_prompt: If True, use prompt as-is without wrapping.
             **kwargs: Additional arguments for the model router's generate method.
 
         Returns:
@@ -97,15 +99,13 @@ class BaseAgent(ABC):
         """
         self.log.debug(f"Calling LLM. Model preference: {model_preference}, Stream: {stream}")
         effective_system_prompt = system_prompt or self.default_system_prompt
-        # Add system prompt handling if model router/connectors support it easily,
-        # otherwise prepend it to the main prompt or handle in specific connectors.
-        # For simplicity, let's assume model_router.generate doesn't have a dedicated system_prompt arg yet.
-        # We might need to adjust the prompt format based on LLM expectations.
-        full_prompt = f"{effective_system_prompt}\n\nUSER: {prompt}\n\nASSISTANT:" # Example format
+        
+        # Use raw prompt if specified, otherwise wrap with system prompt
+        full_prompt = prompt if raw_prompt else f"{effective_system_prompt}\n\nUSER: {prompt}\n\nASSISTANT:"
 
         try:
             response = await self.model_router.generate(
-                prompt=full_prompt, # Or pass prompt and system_prompt separately if router supports it
+                prompt=full_prompt,
                 model_preference=model_preference,
                 stream=stream,
                 **kwargs
@@ -113,7 +113,7 @@ class BaseAgent(ABC):
             return response
         except Exception as e:
             self.log.exception(f"Error calling LLM: {e}", exc_info=True)
-            raise # Re-raise the exception
+            raise  # Re-raise the exception
 
     async def _use_skill(self, skill_name: str, *args, **kwargs) -> Any:
         """
