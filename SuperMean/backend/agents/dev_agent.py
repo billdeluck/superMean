@@ -25,7 +25,7 @@ class DevAgent(BaseAgent):
         "4. Managing dependencies and project structure\n"
         "5. Analyzing code quality and suggesting improvements\n"
         "6. Understanding and implementing design patterns\n"
-        "Approach tasks systematically and consider security, performance, and maintainability."
+        "Use ReAct Approach and Approach tasks systematically and consider security, performance, and maintainability."
     )
 
     def __init__(
