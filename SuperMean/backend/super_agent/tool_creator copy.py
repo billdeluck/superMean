@@ -267,25 +267,24 @@ class SecureFunction:
             if len(value) > self.config.get('max_input_length', 1000):
                 raise ValueError("Input exceeds maximum length")
 
+            # Check for command injection
+            if re.search(r'[;&|`$]', value):
+                raise ValueError("Input contains invalid characters")
+                
+            # Check for path traversal
+            if '..' in value or value.startswith('/'):
+                raise ValueError("Invalid path format")
+                
             # Check for potentially dangerous patterns
             dangerous_patterns = [
                 'rm', 'sudo', 'wget', 'curl',
                 '/etc/', '/usr/', '/var/',
-                '../', './',
                 'eval', 'exec', 'system'
             ]
             value_lower = value.lower()
             for pattern in dangerous_patterns:
                 if pattern in value_lower:
-                    raise ValueError(f"Input contains restricted pattern: {pattern} not allowed")
-
-            # Check for command injection
-            if re.search(r'[;&|`$]', value):
-                raise ValueError("Input contains invalid characters")
-
-            # Check for path traversal
-            if '..' in value or value.startswith('/'):
-                raise ValueError("Invalid path format")
+                    raise ValueError(f"Input contains restricted pattern: {pattern}")
 
     def validate_output(self, value: Any) -> None:
         """Validate function output for security."""
@@ -435,9 +434,8 @@ class CodeGeneratorAgent:
             f"1. Include type hints (str for args)\n"
             f"2. Include docstring\n"
             f"3. Handle errors appropriately\n"
-            f"4. Follow PEP-8 strictly, especially regarding indentation (4 spaces per level).\n"
-            f"5. Ensure the code is syntactically correct and executable.\n"
-            f"6. Be self-contained\n"
+            f"4. Follow PEP-8\n"
+            f"5. Be self-contained\n"
         )
         
         try:
@@ -457,10 +455,9 @@ class CodeGeneratorAgent:
                 
             # Validate and sanitize code using SyntaxValidatorAgent
             sanitized_code = self.syntax_validator.sanitize_code(code)
-
             if not self.syntax_validator.validate_ast(sanitized_code):
                 raise ToolCreationError("Code validation failed")
-
+                
             # Cache valid code
             self._tool_cache[cache_key] = (sanitized_code, {"description": description})
             return sanitized_code
@@ -783,7 +780,6 @@ class ToolCreator:
 
             # Execute code in sandbox
             try:
-                print(f"Executing code: {code}")
                 exec(code, exec_globals, namespace)
                 func = next(f for f in namespace.values() if callable(f))
             except Exception as e:
