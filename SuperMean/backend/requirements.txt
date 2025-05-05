@@ -45,6 +45,7 @@ google-search-results>=2.4.0
 
 # --- Memory ---
 chromadb>=0.4.24,<0.5.0 # Vector DB for advanced memory - pinning minor version
+aiofiles>=23.0.0,<24.0.0 # For async file operations in EventBus
 
 # Placeholder for Vector Database client (choose one or more)
 # faiss-cpu
